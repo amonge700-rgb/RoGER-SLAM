@@ -67,32 +67,32 @@ def get_loss(params, curr_data, variables, iter_time_idx, loss_weights, use_sil_
             losses['depth'] = torch.abs(curr_data['depth'] - depth)[mask].mean()
 
     if tracking and (use_sil_for_loss or ignore_outlier_depth_loss):
-        # --------- 参数设置 ---------
+        # --------- param ---------
         gamma_im = 1 #0.1
         gamma_depth = 2 #0.1
-        lambda_ratio = 0.5  # 比值正则项权重 0.05
-        target_ratio = 2  # 目标深度:颜色损失比例（即 L_depth / L_im ≈ 2）
+        lambda_ratio = 0.5  # 
+        target_ratio = 2  #  L_depth / L_im ≈ 2）
         opacity_thresh = 0.99
         eps = 1e-6
         # ----------------------------
 
-        # 残差计算
+        # residual compute
         color_residual = torch.abs(curr_data['im'] - im)  # (3, H, W)
         color_residual_mean = color_residual.mean(dim=0)  # (H, W)
         depth_residual = torch.abs(curr_data['depth'] - depth)[0]  # (H, W)
 
-        # 蒙版
+        # mask
         sil_mask = (silhouette > opacity_thresh)
 
-        # 自适应加权
+        # adaptive
         w_im = gamma_im / (color_residual_mean + gamma_im)
         w_depth = gamma_depth / (depth_residual + gamma_depth)
 
-        # 加权损失项
+        # weight
         L_im = (w_im * color_residual_mean)[sil_mask].sum()
         L_depth = (w_depth * depth_residual)[sil_mask].sum()
 
-        # 比值正则项
+        # regulation
         ratio_reg = ((L_depth / (L_im + eps)) - target_ratio) ** 2
 
         # 写入损失字典
@@ -100,7 +100,7 @@ def get_loss(params, curr_data, variables, iter_time_idx, loss_weights, use_sil_
         losses['depth'] = L_depth
         losses['ratio'] = lambda_ratio * ratio_reg
 
-        # RGB Loss 替换
+        # RGB Loss 
     if tracking and (use_sil_for_loss or ignore_outlier_depth_loss):
         color_mask = torch.tile(mask, (3, 1, 1))
         color_mask = color_mask.detach()
@@ -112,7 +112,7 @@ def get_loss(params, curr_data, variables, iter_time_idx, loss_weights, use_sil_
 
 
 
-# === 替代 normalize 的融合构造 ===
+# === Fuse ===
         rgb = curr_data['im']
         pred_rgb = im
         gt_depth = curr_data['depth'].unsqueeze(0)
@@ -137,15 +137,13 @@ def get_loss(params, curr_data, variables, iter_time_idx, loss_weights, use_sil_
         fused_gt = 0.6 * rgb + 0.3 * depth_3ch + 0.1 * grad_3ch
 
 
-# === 损失函数计算 ===
+# === Loss function ===
         color_loss = F.l1_loss(pred_rgb, rgb)
         depth_loss = F.l1_loss(pred_depth, gt_depth)
         illumination_loss = F.l1_loss(pred_rgb, fused_gt)
 
-        # 修复 illumination loss 权重计算方式
         illum_weight = min(illumination_loss.item() / (color_loss.item() + 1e-6), 0.1)
 
-        # 修复 depth_loss 尺寸不一致
         depth_loss = F.l1_loss(pred_depth, gt_depth.squeeze(1))
 
         losses['color'] = color_loss
