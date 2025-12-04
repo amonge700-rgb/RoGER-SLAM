@@ -23,8 +23,6 @@ It introduces three key innovations that significantly improve tracking stabilit
 
 https://github.com/user-attachments/assets/c0129b2c-675d-4269-b131-ff9a2fbdcc20
 
-RoGER-SLAM is a robust 3D Gaussian Splatting–based SLAM system designed to handle severe noise, low illumination, and real sensor degradations.
-It introduces three key innovations that significantly improve tracking stability, geometric consistency, and photometric robustness compared with existing 3DGS-SLAM frameworks such as SplaTAM and GS-SLAM.
 
 🔧 Released Modules & Integration Notes
 
