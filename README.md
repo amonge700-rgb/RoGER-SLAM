@@ -2,6 +2,7 @@
 RoGER-SLAM DEMO and Module code
 
 📺 Videos & Demo
+
 https://github.com/user-attachments/assets/c0129b2c-675d-4269-b131-ff9a2fbdcc20
 
 RoGER-SLAM is a robust 3D Gaussian Splatting–based SLAM system designed to handle severe noise, low illumination, and real sensor degradations.
