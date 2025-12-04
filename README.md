@@ -40,9 +40,6 @@ Achieves 1.4M Gaussians vs. 5.0M in SplaTAM
 
 Improves efficiency & memory footprint
 
+🙏 Acknowledgments
 
-📈 Experimental Results
-Replica Benchmark
-Method	ATE ↓	PSNR ↑	Notes
-SplaTAM	0.36	33.1	baseline fails under noise
-RoGER-SLAM	0.24	34.8	robust structure + adaptive tracking
+We gratefully acknowledge the authors of SplaTAM for releasing their excellent 3DGS-SLAM framework, which serves as an important baseline and reference implementation for this project. Their open-source contribution has significantly facilitated research progress in Gaussian Splatting–based SLAM systems.
