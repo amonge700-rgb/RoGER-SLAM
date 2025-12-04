@@ -69,11 +69,8 @@ def get_loss(params, curr_data, variables, iter_time_idx, loss_weights, use_sil_
     if tracking and (use_sil_for_loss or ignore_outlier_depth_loss):
         # --------- 参数设置 ---------
         gamma_im = 1 #0.1
-        # gamma_im = 0.1
         gamma_depth = 2 #0.1
-        # gamma_depth = 0.1
         lambda_ratio = 0.5  # 比值正则项权重 0.05
-        # lambda_ratio = 0.05
         target_ratio = 2  # 目标深度:颜色损失比例（即 L_depth / L_im ≈ 2）
         opacity_thresh = 0.99
         eps = 1e-6
