@@ -10,12 +10,10 @@ def prune_gaussians(params, variables, optimizer, iter, prune_dict, imp_score):
 
             to_remove = norm_score < threshold
 
-            # 移除大尺寸点
             if iter >= prune_dict['remove_big_after']:
                 big_points_ws = torch.exp(params['log_scales']).max(dim=1).values > 0.1 * variables['scene_radius']
                 to_remove = torch.logical_or(to_remove, big_points_ws)
 
-            # 执行剪枝
             from utils.slam_external import remove_points
             params, variables = remove_points(to_remove, params, variables, optimizer)
             torch.cuda.empty_cache()
