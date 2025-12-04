@@ -1,7 +1,7 @@
 # --- [Multi-Scale Importance Gating Densification] ---
             if config['mapping']['add_new_gaussians'] and time_idx > 0:
 
-                # Step 1: 使用多尺度 importance 判断当前帧是否值得 densify
+                # Step 1: use importance to judge densify
                 if config['mapping'].get('use_imp_score_filter_for_densify', False):
                     from utils.gs_helpers import compute_single_frame_importance_for_mapping
 
@@ -19,7 +19,7 @@
                         # 如果 importance 太低，跳过 densification
                         continue
 
-                # Step 2: 准备当前帧的输入数据
+                # Step 2: prepare input
                 if seperate_densification_res:
                     densify_color, densify_depth, _, _ = densify_dataset[time_idx]
                     densify_color = densify_color.permute(2, 0, 1) / 255
@@ -32,7 +32,7 @@
                 else:
                     densify_curr_data = curr_data
 
-                # Step 3: 执行 densify
+                # Step 3:  densify
                 params, variables = add_new_gaussians(
                     params, variables, densify_curr_data,
                     config['mapping']['sil_thres'], time_idx,
